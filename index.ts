@@ -8,7 +8,17 @@ const server = fastify()
 const getProxiesJob = cron.schedule('0 */4 * * *', getProxies, { scheduled: false })
 
 server.get('/proxies', async (request, reply) => {
+  const params = request.query as { country: string }
+
   const data = fs.readFileSync('proxies.json')
+
+  if (params.country) {
+    const country = params.country.toUpperCase()
+
+    const proxies = JSON.parse(data.toString()).filter((item: { country: string }) => item.country === country)
+
+    reply.send(proxies)
+  }
 
   reply.send(JSON.parse(data.toString()))
 })
