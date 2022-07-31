@@ -1,21 +1,30 @@
 {
-  "name": "fastify",
+  "name": "cron-jobs",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "Faraz Patankar",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon index.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsup index.ts",
     "start": "node dist/index.js"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "*.json"
+    ]
+  },
   "dependencies": {
-    "fastify": "^3.15.1"
+    "@types/node-cron": "^3.0.2",
+    "axios": "^0.27.2",
+    "fastify": "^3.15.1",
+    "node-cron": "3.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "^15.6.1",
     "nodemon": "^2.0.7",
     "ts-node": "^10.0.0",
+    "tsup": "^6.2.1",
     "typescript": "^4.2.4"
   }
 }

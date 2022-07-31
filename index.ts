@@ -1,15 +1,31 @@
-import fastify from "fastify";
+import fastify from 'fastify'
+import cron from 'node-cron'
+import fs from 'fs'
+import { getProxies } from './get-proxies'
 
-const server = fastify();
+const server = fastify()
 
-server.get("/", async (request, reply) => {
-  reply.code(200).send({ message: "Hello world!" });
-});
+const getProxiesJob = cron.schedule('0 */4 * * *', getProxies, { scheduled: false })
 
-server.listen(process.env.PORT || 8080, "0.0.0.0", (err, address) => {
+server.get('/proxies', async (request, reply) => {
+  const data = fs.readFileSync('proxies.json')
+
+  reply.send(JSON.parse(data.toString()))
+})
+
+server.get('/', async (request, reply) => {
+  reply.code(200).send({ message: 'Hello world!' })
+})
+
+server.listen(process.env.PORT || 8080, async (err, address) => {
   if (err) {
-    console.error(err);
-    process.exit(1);
+    console.error(err)
+    process.exit(1)
   }
-  console.log(`Server listening at ${address}`);
-});
+
+  getProxiesJob.start()
+
+  await getProxies()
+
+  console.log(`Server listening at ${address}`)
+})
