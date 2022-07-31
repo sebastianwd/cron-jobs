@@ -17,7 +17,9 @@ server.get('/', async (request, reply) => {
   reply.code(200).send({ message: 'Hello world!' })
 })
 
-server.listen(process.env.PORT || 8080, async (err, address) => {
+const bindingAddress = process.env.BINDING_ADDRESS || ''
+
+server.listen(process.env.PORT || 8080, bindingAddress, async (err, address) => {
   if (err) {
     console.error(err)
     process.exit(1)
